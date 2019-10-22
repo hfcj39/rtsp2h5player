@@ -63,9 +63,10 @@ class liveServer extends EventEmitter {
 
     private static getCmd() {
         const clientname = 'live555client';
+        const rootPath = join(__dirname,'../../');
         const platformarch = os.arch();
         const platform = os.platform();
-        return join(__dirname, 'extend', platform, platformarch, clientname);
+        return join(rootPath,'src/lib/extend', platform, platformarch, clientname);
     }
 }
 
