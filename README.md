@@ -6,7 +6,7 @@ rtsp转FLV从而使前端可以使用h5播放器
 ```javascript
 flvjs.createPlayer({
     type: 'flv',
-    url: 'http://127.0.0.1:3000/api/live555/rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov',
+    url: 'http://127.0.0.1:3000/api/live555/?url=rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov',
     isLive: true,
 })
 ```
