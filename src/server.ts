@@ -4,12 +4,11 @@ import config from './config'
 import api from './api'
 
 const app = new Koa();
-const router = new Router();
 
 const route = new Router();
 route.use('/api', api.routes(), api.allowedMethods());
 
-app.use(router.routes());
+app.use(route.routes()).use(route.allowedMethods());
 
 app.listen(config.port);
 

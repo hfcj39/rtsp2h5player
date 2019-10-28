@@ -16,6 +16,7 @@
   "dependencies": {
     "koa": "^2.10.0",
     "koa-router": "^7.4.0",
+    "lodash": "^4.17.15",
     "rtsp-live555": "^1.8.7",
     "validator": "^11.1.0"
   },

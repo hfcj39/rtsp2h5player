@@ -3,12 +3,11 @@ import {PassThrough} from "stream";
 import {Validator} from '../../utils/param-validator'
 
 const urlValidator = new Validator({
-    formClass: {ctx: 'fields', type: 'string', required: true},
-    abc: {ctx: 'fields', type: 'string', required: true},
+    url: {ctx: 'query', type: 'url', required: true},
 });
 
 export const trans2flvByLive = async (ctx) => {
-    const url = ctx.request.url.slice(1);
+    const {url} = urlValidator.validate(ctx);
     if (url) {
         ctx.set({
             'Access-Control-Allow-Origin': '*',
