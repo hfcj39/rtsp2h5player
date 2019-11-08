@@ -2,8 +2,8 @@
 const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');
-var os = require('os');
-console.log('exec postinstall');
+let os = require('os');
+console.log('exec postinstall... please wait...');
 
 const rootpath = path.join(__dirname, '../', 'src', 'lib', 'extend');
 

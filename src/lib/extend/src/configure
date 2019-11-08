@@ -1,15 +1,16 @@
 #!/bin/sh
-OS=`uname`
-CMD_PATH=`dirname $0`
-echo $CMD_PATH
-cd $CMD_PATH/live
-if [ $OS=="Darwin" ];then
+OS=$(uname)
+CMD_PATH=$(dirname "$0")
+echo "$CMD_PATH"
+cd "$CMD_PATH"/live || exit
+
+if [ "$OS" = "Darwin" ];then
     ./genMakefiles macosx
-elif [ $OS=="Linux" ];then
+elif [ "$OS" = "Linux" ];then
     ./genMakefiles linux
 else
     ./genMakefiles mingw
 fi
 make
-cd $CMD_PATH
+cd "$CMD_PATH" || exit
 make
