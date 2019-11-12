@@ -3,14 +3,16 @@ import {ChildProcess, spawn} from "child_process"
 import {join} from 'path'
 import * as os from 'os'
 
-class liveServer extends EventEmitter {
+class Transcoder extends EventEmitter {
     private readonly url: string;
+    private readonly mode: string;
     private child: ChildProcess;
 
-    constructor(url) {
+    constructor(url, mode) {
         super();
-        if (url) {
+        if (url && mode) {
             this.url = url;
+            this.mode = mode;
             this.on('newListener', (event) => {
                 if (event === 'data' && this.listeners(event).length === 0) {
                     this.start();
@@ -27,15 +29,26 @@ class liveServer extends EventEmitter {
     }
 
     start() {
-        this.child = spawn(liveServer.getCmd(), [this.url]);
-        this.child.stdout.on('data', this.emit.bind(this, 'data')); //转发
+        if (this.mode === 'ffmpeg') {
+            let args = [
+                "-i", this.url,
+                "-acodec", "copy", "-vcodec", "copy",
+                "-f", "flv", "-",
+            ];
+            this.child = spawn('ffmpeg', args);
+        }else if(this.mode === 'live555'){
+            this.child = spawn(Transcoder.getCmd(), [this.url]);
+        }else {
+            throw new Error('unsupported mode')
+        }
+        this.child.stdout.on('data', this.emit.bind(this, 'data'));
         this.child.stderr.on('data', function (data) {
             throw new Error(data);
         });
         this.emit('start');
 
         this.child.on('error', (err) => {
-            console.log('You may have not build Live555Client yet', err);
+            console.log('Error', err);
             this.stop()
         });
         this.child.on('close', (code) => {
@@ -63,11 +76,11 @@ class liveServer extends EventEmitter {
 
     private static getCmd() {
         const clientname = 'live555client';
-        const rootPath = join(__dirname,'../../');
+        const rootPath = join(__dirname, '../../');
         const platformarch = os.arch();
         const platform = os.platform();
-        return join(rootPath,'src/lib/extend', platform, platformarch, clientname);
+        return join(rootPath, 'src/lib/extend', platform, platformarch, clientname);
     }
 }
 
-export default liveServer
+export default Transcoder

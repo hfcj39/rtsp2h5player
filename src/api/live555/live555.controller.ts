@@ -1,4 +1,4 @@
-import {liveServer} from "../../lib";
+import {Transcoder} from "../../lib";
 import {PassThrough} from "stream";
 import {Validator} from '../../utils/param-validator'
 
@@ -14,7 +14,7 @@ export const trans2flvByLive = async (ctx) => {
             'Connection': 'Keep-Alive',
             'Content-Type': 'video/x-flv'
         });
-        let stream = new liveServer(url);
+        let stream = new Transcoder(url, 'live555');
         const _stream = new PassThrough();
         stream.on('start', () => {
             console.log(url + ' started');
