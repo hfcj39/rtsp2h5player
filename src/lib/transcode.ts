@@ -31,19 +31,23 @@ class Transcoder extends EventEmitter {
     start() {
         if (this.mode === 'ffmpeg') {
             let args = [
+                "-loglevel", "error",
                 "-i", this.url,
-                "-acodec", "copy", "-vcodec", "copy",
+                // "-acodec", "copy",
+                "-an",
+                "-vcodec", "copy",
                 "-f", "flv", "-",
             ];
             this.child = spawn('ffmpeg', args);
-        }else if(this.mode === 'live555'){
+        } else if (this.mode === 'live555') {
             this.child = spawn(Transcoder.getCmd(), [this.url]);
-        }else {
+        } else {
             throw new Error('unsupported mode')
         }
         this.child.stdout.on('data', this.emit.bind(this, 'data'));
         this.child.stderr.on('data', function (data) {
-            throw new Error(data);
+            console.log('stderr', data.toString())
+            // throw new Error(data);
         });
         this.emit('start');
 
