@@ -18,14 +18,14 @@ const TYPES = [
     'array',
 ];
 
-class ValidateError extends Error {
+export class ValidateError extends Error {
     constructor(message) {
         super(message);
         this.name = 'ValidateError'
     }
 }
 
-export class Validator {
+export default class Validator {
     private args: object;
 
     constructor(args: object) {

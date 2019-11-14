@@ -1,6 +1,6 @@
 import {PassThrough} from "stream";
 import {spawn} from "child_process"
-import {Validator} from '../../utils/param-validator'
+import Validator from '../../utils/param-validator'
 import {Transcoder} from "../../lib";
 
 const urlValidator = new Validator({

@@ -32,9 +32,9 @@ class Transcoder extends EventEmitter {
         if (this.mode === 'ffmpeg') {
             let args = [
                 "-loglevel", "error",
+                // "-loglevel", "fatal",
                 "-i", this.url,
-                // "-acodec", "copy",
-                "-an",
+                "-acodec", "copy",
                 "-vcodec", "copy",
                 "-f", "flv", "-",
             ];

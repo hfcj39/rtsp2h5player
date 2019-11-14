@@ -1,6 +1,6 @@
 import {Transcoder} from "../../lib";
 import {PassThrough} from "stream";
-import {Validator} from '../../utils/param-validator'
+import Validator from '../../utils/param-validator'
 
 const urlValidator = new Validator({
     url: {ctx: 'query', type: 'url', required: true},

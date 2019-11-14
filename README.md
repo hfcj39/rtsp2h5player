@@ -29,3 +29,5 @@ flvjs.createPlayer({
 
 # todo
 当前实现方式仅供demo，后续有时间继续优化
+
+http2支持
