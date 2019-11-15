@@ -30,13 +30,12 @@ class Transcoder extends EventEmitter {
     }
 
     start() {
-        let self = this;
         if (this.mode === 'ffmpeg') {
             let args = [
                 "-loglevel", "error",
                 // "-loglevel", "fatal",
-                // "-i", this.url,
-                "-i", '/Users/bingpo/Downloads/cars.mp4',
+                "-i", this.url,
+                // "-i", '/Users/bingpo/Downloads/cars.mp4',
                 // "-profile:v","main",
                 // "-preset:v","fast",
                 // "-rtbufsize", "100M",
@@ -65,7 +64,7 @@ class Transcoder extends EventEmitter {
         this.child.on('close', (code, sig) => {
             console.log('child closed, code:', code, sig);
             if (code === 0) {
-                self.restart.call(self)
+                this.restart.call(this)
             } else {
                 this.emit('stop');
             }
