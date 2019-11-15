@@ -6,6 +6,7 @@ import * as os from 'os'
 class Transcoder extends EventEmitter {
     private readonly url: string;
     private readonly mode: string;
+    private count: number = 0;
     private child: ChildProcess;
 
     constructor(url, mode) {
@@ -29,11 +30,16 @@ class Transcoder extends EventEmitter {
     }
 
     start() {
+        let self = this;
         if (this.mode === 'ffmpeg') {
             let args = [
                 "-loglevel", "error",
                 // "-loglevel", "fatal",
-                "-i", this.url,
+                // "-i", this.url,
+                "-i", '/Users/bingpo/Downloads/cars.mp4',
+                // "-profile:v","main",
+                // "-preset:v","fast",
+                // "-rtbufsize", "100M",
                 "-acodec", "copy",
                 "-vcodec", "copy",
                 "-f", "flv", "-",
@@ -42,6 +48,7 @@ class Transcoder extends EventEmitter {
         } else if (this.mode === 'live555') {
             this.child = spawn(Transcoder.getCmd(), [this.url]);
         } else {
+            console.log(this.mode);
             throw new Error('unsupported mode')
         }
         this.child.stdout.on('data', this.emit.bind(this, 'data'));
@@ -55,10 +62,12 @@ class Transcoder extends EventEmitter {
             console.log('Error', err);
             this.stop()
         });
-        this.child.on('close', (code) => {
-            console.log('child closed, code:', code);
+        this.child.on('close', (code, sig) => {
+            console.log('child closed, code:', code, sig);
             if (code === 0) {
-                setTimeout(this.restart, 1000);
+                self.restart.call(self)
+            } else {
+                this.emit('stop');
             }
         });
     }
@@ -72,9 +81,12 @@ class Transcoder extends EventEmitter {
     }
 
     restart() {
-        if (this.child) {
-            this.stop();
+        if (this.child && this.count < 3) {
+            console.log('restarting...');
+            this.child.kill();
+            delete this.child;
             this.start();
+            this.count++
         }
     }
 

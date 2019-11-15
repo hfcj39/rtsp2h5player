@@ -22,15 +22,17 @@ export const ffmpeg2flv = async (ctx) => {
         });
         stream.on('stop', () => {
             console.log(url + ' stopped');
+            _stream.end();
+            ctx.res.end();
         });
         stream.on('data', (data) => {
             let _success: boolean = _stream.write(data);
         });
         _stream.on('close', () => {
             console.log('passThrough-close');
-            _stream.end();
+            // _stream.end();
             stream.stop();
-            ctx.res.end()
+            // ctx.res.end()
         });
         ctx.body = _stream
     } else {
