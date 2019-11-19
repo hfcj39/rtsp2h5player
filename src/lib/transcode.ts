@@ -47,7 +47,7 @@ class Transcoder extends EventEmitter {
         } else if (this.mode === 'live555') {
             this.child = spawn(Transcoder.getCmd(), [this.url]);
         } else {
-            console.log(this.mode);
+            console.log('mode', this.mode);
             throw new Error('unsupported mode')
         }
         this.child.stdout.on('data', this.emit.bind(this, 'data'));
@@ -55,27 +55,27 @@ class Transcoder extends EventEmitter {
             console.log('stderr', data.toString())
             // throw new Error(data);
         });
-        this.emit('start');
-
         this.child.on('error', (err) => {
             console.log('Error', err);
-            this.stop()
+            this.stop.call(this)
         });
         this.child.on('close', (code, sig) => {
             console.log('child closed, code:', code, sig);
             if (code === 0) {
                 this.restart.call(this)
             } else {
-                this.emit('stop');
+                this.stop.call(this)
             }
         });
+        this.emit('start');
     }
 
     stop() {
         if (this.child) {
-            this.emit('stop');
+            this.child.disconnect();
             this.child.kill();
-            delete this.child;
+            this.child = null;
+            this.emit('stop');
         }
     }
 

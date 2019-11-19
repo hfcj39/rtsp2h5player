@@ -16,25 +16,29 @@ export const ffmpeg2flv = async (ctx) => {
         });
         const _stream = new PassThrough();
 
-        let stream = new Transcoder(url, 'ffmpeg');
-        stream.on('start', () => {
-            console.log(url + ' started');
-        });
-        stream.on('stop', () => {
-            console.log(url + ' stopped');
+        let transcoder = new Transcoder(url, 'ffmpeg');
+        try {
+            transcoder.on('stop', () => {
+                console.log(url + ' stopped');
+                _stream.end();
+                ctx.res.end();
+            });
+            transcoder.on('data', (data) => {
+                let _success: boolean = _stream.write(data);
+            });
+            _stream.on('close', () => {
+                console.log('passThrough-close');
+                transcoder.stop();
+            });
+            transcoder.on('start', () => {
+                console.log(url + ' started');
+            });
+            ctx.body = _stream
+        } catch (e) {
+            console.log(e);
             _stream.end();
             ctx.res.end();
-        });
-        stream.on('data', (data) => {
-            let _success: boolean = _stream.write(data);
-        });
-        _stream.on('close', () => {
-            console.log('passThrough-close');
-            // _stream.end();
-            stream.stop();
-            // ctx.res.end()
-        });
-        ctx.body = _stream
+        }
     } else {
         ctx.status = 204;
         ctx.body = null;

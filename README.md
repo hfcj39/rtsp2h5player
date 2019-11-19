@@ -2,8 +2,8 @@
 rtsp转FLV从而使前端可以使用h5播放器
 
 # 用法
-目前需要手动安装ffmpeg。
-如果使用flvjs，在播放器地址填写本服务端地址+rtsp地址即可，config中配置端口，e.g.  
+目前需要手动安装ffmpeg。  
+如果前端使用flvjs，在播放器地址填写本服务端地址+rtsp地址即可，config中配置端口，e.g.  
 
 ### ffmpeg
 
