@@ -57,14 +57,14 @@ class Transcoder extends EventEmitter {
         });
         this.child.on('error', (err) => {
             console.log('Error', err);
-            this.stop.call(this)
+            this.stop.call(this);
         });
         this.child.on('close', (code, sig) => {
             console.log('child closed, code:', code, sig);
             if (code === 0) {
                 this.restart.call(this)
             } else {
-                this.stop.call(this)
+                this.stop.call(this);
             }
         });
         this.emit('start');
@@ -72,8 +72,8 @@ class Transcoder extends EventEmitter {
 
     stop() {
         if (this.child) {
-            this.child.disconnect();
-            this.child.kill();
+            // this.child.disconnect();
+            this.child.kill('SIGKILL');
             this.child = null;
             this.emit('stop');
         }

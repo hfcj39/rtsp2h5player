@@ -18,20 +18,21 @@ export const ffmpeg2flv = async (ctx) => {
 
         let transcoder = new Transcoder(url, 'ffmpeg');
         try {
+            transcoder.on('start', () => {
+                console.log(url + ' started');
+            });
             transcoder.on('stop', () => {
                 console.log(url + ' stopped');
                 _stream.end();
-                ctx.res.end();
+                // ctx.res.end();
             });
             transcoder.on('data', (data) => {
-                let _success: boolean = _stream.write(data);
+                _stream.write(data);
             });
             _stream.on('close', () => {
-                console.log('passThrough-close');
+                transcoder.removeAllListeners('data');
                 transcoder.stop();
-            });
-            transcoder.on('start', () => {
-                console.log(url + ' started');
+                // console.log('passThrough-close');
             });
             ctx.body = _stream
         } catch (e) {
