@@ -1,3 +1,6 @@
 export default {
-    port: 11451
+    port: {
+        prd: 80,
+        dev: 11451,
+    }
 };

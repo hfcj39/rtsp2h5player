@@ -21,15 +21,15 @@ export const trans2flvByLive = async (ctx) => {
         });
         stream.on('stop', () => {
             console.log(url + ' stopped');
+            _stream.end();
         });
         stream.on('data', (data) => {
             let _success: boolean = _stream.write(data);
         });
         _stream.on('close', () => {
             console.log('passThrough-close');
-            _stream.end();
+            _stream.removeAllListeners('data');
             stream.stop();
-            ctx.res.end()
         });
         // .on('finish', () => {
         //     console.log('passThrough-finish');
