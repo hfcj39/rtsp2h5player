@@ -6,11 +6,11 @@
   "types": "dist/server.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && npx tsc",
     "serve": "ts-node src/server.ts",
     "dev": "ts-node-dev src/server.ts",
     "postinstall": "node ./scripts/postinstall",
-    "pm2": "npm run build && pm2 start",
+    "pm2": "npx pm2 start",
     "docker:build": "docker build -t iva/rtsp .",
     "docker:run": "docker run -it -p 8081:80 --rm --name rtsp iva/rtsp"
   },
@@ -20,6 +20,7 @@
     "koa": "^2.10.0",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.15",
+    "pm2": "^4.1.2",
     "validator": "^11.1.0"
   },
   "devDependencies": {
