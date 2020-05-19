@@ -6,18 +6,15 @@ export class StreamServer {
     private static _server: StreamServer
     private _streams: Transcoder[] = []
 
-    public static getInstance() {
+    public static getInstance(): StreamServer {
         if (this._server) {
             return this._server
         }
         return this._server = new this()
     }
 
-    constructor() {
-    }
-
-    public getStream(url): PassThrough {
-        let stream: PassThrough = new PassThrough()
+    public getStream(url: string): PassThrough {
+        const stream: PassThrough = new PassThrough()
         let data_stream: Transcoder
         const dataStreamIndex: number = this._streams.findIndex((stream) => {
             return stream.url = url
@@ -39,14 +36,14 @@ export class StreamServer {
         return stream
     }
 
-    private createStream(url): Transcoder {
+    private createStream(url: string): Transcoder {
         const data_stream: Transcoder = new Transcoder(url)
         this._streams.push(data_stream)
         return data_stream
     }
 
     delStream(transcoder: Transcoder): void {
-        let index: number = this._streams.indexOf(transcoder);
+        const index: number = this._streams.indexOf(transcoder);
         if (index > -1) {
             this._streams.splice(index, 1);
             transcoder.stopStreamWrap();
