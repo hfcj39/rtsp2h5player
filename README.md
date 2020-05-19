@@ -15,17 +15,8 @@ flvjs.createPlayer({
 })
 ```
 
-### live555
-
-*对于高分辨率码流暂时可能出现花屏，会在后续版本中修复*
-
-```javascript
-flvjs.createPlayer({
-    type: 'flv',
-    url: 'http://127.0.0.1:11451/api/live555/?url=rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov',
-    isLive: true,
-})
-```
+## 其他分支
+dev分支是一个更为简单的demo，包含live555的转码方式。
 
 # todo
 当前实现方式仅供demo，后续有时间继续优化
