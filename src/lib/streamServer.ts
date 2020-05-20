@@ -1,5 +1,5 @@
 import {Transcoder} from './transcoder'
-import {PassThrough} from "stream";
+import {PassThrough, Readable} from "stream";
 
 export class StreamServer {
 
@@ -13,27 +13,47 @@ export class StreamServer {
         return this._server = new this()
     }
 
-    public getStream(url: string): PassThrough {
+    public getStream(url: string): Readable {
         const stream: PassThrough = new PassThrough()
         let data_stream: Transcoder
         const dataStreamIndex: number = this._streams.findIndex((stream) => {
-            return stream.url = url
+            return stream.url === url
         })
         if (dataStreamIndex < 0) {
             data_stream = this.createStream(url)
+            console.log('没有找到现有子进程，创建')
         } else {
             data_stream = this._streams[dataStreamIndex]
+            console.log('找到子进程，复用')
         }
         data_stream.connect++
-        data_stream.pipe(stream)
-        stream.on('close', () => {
-            data_stream.unpipe(stream)
+        const {readable, index} = data_stream.getFLVStream()
+        // readable.pipe(stream)
+        // stream.on('error', (err) => {
+        //     console.log('err', err)
+        // })
+        // stream.on('finish', () => {
+        //     console.log('finish')
+        // })
+        // stream.on('close', () => {
+        //     console.log('连接关闭')
+        //     data_stream.closeFLVStream(index)
+        //     readable.unpipe(stream)
+        //     data_stream.connect--
+        //     if (data_stream.connect <= 0) {
+        //         this.delStream(data_stream)
+        //     }
+        // })
+        readable.on('close', () => {
+            console.log('连接关闭')
+            data_stream.closeFLVStream(index)
+            // readable.unpipe(stream)
             data_stream.connect--
             if (data_stream.connect <= 0) {
                 this.delStream(data_stream)
             }
         })
-        return stream
+        return readable
     }
 
     private createStream(url: string): Transcoder {
